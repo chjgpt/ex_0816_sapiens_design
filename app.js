@@ -129,3 +129,66 @@ $("#savedList").addEventListener("click",e=>{const b=e.target.closest("[data-rem
 renderQuote(currentIndex);renderGrid();renderSaved();
 const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("is-visible");revealObserver.unobserve(entry.target)}}),{threshold:.15});
 document.querySelectorAll(".hero .eyebrow,.hero h1,.hero-copy,.hero>.primary-button,.orb,.explore>.eyebrow,.explore>h2,.closing>*").forEach(el=>{el.classList.add("reveal");revealObserver.observe(el)});
+
+// Supabase one-line journal check-in
+let supabaseClient=null, selectedMood="";
+const checkinDialog=$("#checkinDialog"), journalContent=$("#journalContent");
+
+async function getSupabase(){
+  if(supabaseClient)return supabaseClient;
+  const response=await fetch("/api/supabase-config");
+  if(!response.ok)throw new Error("Vercel에 Supabase 환경변수를 먼저 설정해 주세요.");
+  const config=await response.json();
+  supabaseClient=window.supabase.createClient(config.url,config.anonKey);
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session){
+    const {error}=await supabaseClient.auth.signInAnonymously();
+    if(error)throw error;
+  }
+  return supabaseClient;
+}
+function openCheckin(){
+  if(!checkinDialog.open)checkinDialog.showModal();
+  document.body.classList.add("dialog-open");
+}
+function closeCheckin(){
+  if(checkinDialog.open)checkinDialog.close();
+  document.body.classList.remove("dialog-open");
+  sessionStorage.setItem("daily-checkin-seen","true");
+}
+function localDate(){
+  const now=new Date(), offset=now.getTimezoneOffset()*60000;
+  return new Date(now-offset).toISOString().slice(0,10);
+}
+document.querySelectorAll("[data-mood]").forEach(button=>button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-mood]").forEach(item=>item.classList.remove("selected"));
+  button.classList.add("selected"); selectedMood=button.dataset.mood;
+  $("#checkinStatus").textContent="";
+}));
+journalContent.addEventListener("input",()=>$("#journalCount").textContent=journalContent.value.length);
+$("#checkinNav").addEventListener("click",openCheckin);
+$("#checkinClose").addEventListener("click",closeCheckin);
+$("#checkinSkip").addEventListener("click",closeCheckin);
+checkinDialog.addEventListener("cancel",event=>{event.preventDefault();closeCheckin()});
+$("#checkinForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(!selectedMood){$("#checkinStatus").textContent="오늘의 기분을 하나 골라주세요.";return}
+  const submit=$("#checkinSubmit");submit.disabled=true;submit.textContent="저장하는 중…";
+  try{
+    const client=await getSupabase();
+    const {data:{user}}=await client.auth.getUser();
+    const category=selectedMood==="용기가 필요해요"?"용기":selectedMood==="평온해요"?"성장":"위안";
+    const matches=quotes.map((q,i)=>({...q,i})).filter(q=>q.category===category);
+    const picked=matches[Math.floor(Math.random()*matches.length)];
+    const {error}=await client.from("journal_entries").upsert({
+      user_id:user.id,entry_date:localDate(),mood:selectedMood,
+      content:journalContent.value.trim()||null,quote_text:picked.text,
+      quote_author:picked.author,updated_at:new Date().toISOString()
+    },{onConflict:"user_id,entry_date"});
+    if(error)throw error;
+    renderQuote(picked.i,false,true);closeCheckin();toast("오늘의 마음을 저장했어요.");
+    setTimeout(()=>$("#quote").scrollIntoView({behavior:"smooth"}),320);
+  }catch(error){$("#checkinStatus").textContent=error.message||"저장하지 못했어요. 잠시 후 다시 시도해 주세요."}
+  finally{submit.disabled=false;submit.textContent="마음 남기기 ↗"}
+});
+if(!sessionStorage.getItem("daily-checkin-seen"))setTimeout(openCheckin,850);
