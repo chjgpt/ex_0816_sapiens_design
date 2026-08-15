@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ex-0816-sapiens-design.vercel.app/sitemap.xml
