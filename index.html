@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="하루에 한 문장, 마음과 성장을 위한 위인들의 명언 추천기" />
+  <title>하루 한 문장</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles-pdf.css" />
+</head>
+<body>
+  <header class="global-nav">
+    <a class="brand-mark" href="#top" aria-label="하루 한 문장 홈"><span>하</span></a>
+    <nav aria-label="주요 메뉴">
+      <a href="#today">오늘의 문장</a>
+      <a href="#explore">둘러보기</a>
+      <button class="nav-saved" id="savedNav" type="button">저장한 문장 <span id="savedCount">0</span></button>
+    </nav>
+  </header>
+
+  <div class="sub-nav" id="top">
+    <div class="sub-nav-inner">
+      <a class="wordmark" href="#top">하루 한 문장</a>
+      <span id="todayLabel"></span>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero" id="today" aria-labelledby="heroTitle">
+      <p class="eyebrow">오늘, 당신에게 도착한 말</p>
+      <h1 id="heroTitle">한 문장이<br />하루의 방향을 바꿉니다.</h1>
+      <p class="hero-copy">마음에는 위안을, 일상에는 작은 용기를.<br />오늘 필요한 말을 천천히 만나보세요.</p>
+      <a class="primary-button" href="#quote">오늘의 문장 보기 <span aria-hidden="true">↓</span></a>
+      <div class="orb" aria-hidden="true"><span>“</span><small>마음에 여백을 만드는<br />오늘의 한 문장</small></div>
+    </section>
+
+    <section class="quote-stage" id="quote" aria-live="polite">
+      <div class="quote-inner">
+        <div class="quote-meta">
+          <span id="quoteCategory">성장</span>
+          <span id="quoteNumber">01 / 24</span>
+        </div>
+        <blockquote>
+          <p id="quoteText"></p>
+          <footer>— <cite id="quoteAuthor"></cite></footer>
+        </blockquote>
+        <p class="reflection" id="quoteReflection"></p>
+        <div class="quote-actions">
+          <button class="primary-button" id="nextQuote" type="button">새 문장 추천</button>
+          <button class="secondary-button" id="saveQuote" type="button" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17L12 17l-5.5 3.5v-17Z"/></svg>
+            <span>저장</span>
+          </button>
+          <button class="icon-button" id="shareQuote" type="button" aria-label="명언 공유하기">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L8 7m4-4 4 4M5 11v9h14v-9"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="explore" id="explore" aria-labelledby="exploreTitle">
+      <p class="eyebrow">지금 내게 필요한 말</p>
+      <h2 id="exploreTitle">어떤 마음으로<br />오늘을 보내고 있나요?</h2>
+      <div class="filters" role="group" aria-label="명언 주제 선택">
+        <button class="filter active" data-category="전체" type="button">전체</button>
+        <button class="filter" data-category="위안" type="button">위안</button>
+        <button class="filter" data-category="용기" type="button">용기</button>
+        <button class="filter" data-category="성장" type="button">성장</button>
+        <button class="filter" data-category="관계" type="button">관계</button>
+      </div>
+      <div class="quote-grid" id="quoteGrid"></div>
+      <button class="text-link" id="showMore" type="button">더 많은 문장 보기 <span aria-hidden="true">＋</span></button>
+    </section>
+
+    <section class="saved-panel" id="savedPanel" hidden aria-labelledby="savedTitle">
+      <div class="saved-head">
+        <div><p class="eyebrow">나만의 문장 보관함</p><h2 id="savedTitle">저장한 문장</h2></div>
+        <button class="icon-button light" id="closeSaved" type="button" aria-label="저장한 문장 닫기">×</button>
+      </div>
+      <div class="saved-list" id="savedList"></div>
+    </section>
+
+    <section class="closing">
+      <p class="eyebrow">내일도 한 문장</p>
+      <h2>좋은 말은 삶을<br />조금씩 좋은 쪽으로 움직입니다.</h2>
+      <a class="secondary-button" href="#top">처음으로 돌아가기 ↑</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>하루 한 문장</strong><br />위로와 성장을 위한 매일의 작은 루틴.</p>
+    <p>명언은 널리 알려진 번역을 바탕으로 자연스럽게 다듬었습니다.</p>
+    <p>© 2026 One Sentence a Day</p>
+  </footer>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
