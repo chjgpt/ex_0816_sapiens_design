@@ -131,7 +131,7 @@ const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{i
 document.querySelectorAll(".hero .eyebrow,.hero h1,.hero-copy,.hero>.primary-button,.orb,.explore>.eyebrow,.explore>h2,.closing>*").forEach(el=>{el.classList.add("reveal");revealObserver.observe(el)});
 
 // Supabase one-line journal check-in
-let supabaseClient=null, selectedMood="";
+let supabaseClient=null, selectedMood="", todayEntryExists=false;
 const checkinDialog=$("#checkinDialog"), journalContent=$("#journalContent");
 
 async function getSupabase(){
@@ -147,9 +147,27 @@ async function getSupabase(){
   }
   return supabaseClient;
 }
-function openCheckin(){
+async function loadTodayEntry(){
+  const status=$("#checkinStatus"), submit=$("#checkinSubmit"), savedQuote=$("#checkinSavedQuote");
+  status.textContent="오늘 기록을 확인하는 중…";
+  try{
+    const client=await getSupabase();
+    const {data,error}=await client.from("journal_entries").select("mood,content,quote_text,quote_author").eq("entry_date",localDate()).maybeSingle();
+    if(error)throw error;
+    todayEntryExists=Boolean(data);
+    document.querySelectorAll("[data-mood]").forEach(item=>item.classList.toggle("selected",data?.mood===item.dataset.mood));
+    selectedMood=data?.mood||"";journalContent.value=data?.content||"";$("#journalCount").textContent=journalContent.value.length;
+    if(data){
+      $("#checkinSavedQuoteText").textContent=`“${data.quote_text}”`;$("#checkinSavedQuoteAuthor").textContent=`— ${data.quote_author}`;savedQuote.hidden=false;
+      status.textContent="오늘 남긴 기록이에요. 마음이 달라졌다면 편하게 수정하세요.";
+    }else{savedQuote.hidden=true;status.textContent=""}
+    submit.textContent=data?"수정하고 새 문장 받기 ↗":"마음 남기기 ↗";
+  }catch(error){status.textContent=error.message||"오늘 기록을 불러오지 못했어요."}
+}
+async function openCheckin(){
   if(!checkinDialog.open)checkinDialog.showModal();
   document.body.classList.add("dialog-open");
+  await loadTodayEntry();
 }
 function closeCheckin(){
   if(checkinDialog.open)checkinDialog.close();
@@ -186,10 +204,11 @@ $("#checkinForm").addEventListener("submit",async event=>{
       quote_author:picked.author,updated_at:new Date().toISOString()
     },{onConflict:"user_id,entry_date"});
     if(error)throw error;
+    todayEntryExists=true;
     renderQuote(picked.i,false,true);closeCheckin();toast("오늘의 마음을 저장했어요.");
     setTimeout(()=>$("#quote").scrollIntoView({behavior:"smooth"}),320);
   }catch(error){$("#checkinStatus").textContent=error.message||"저장하지 못했어요. 잠시 후 다시 시도해 주세요."}
-  finally{submit.disabled=false;submit.textContent="마음 남기기 ↗"}
+  finally{submit.disabled=false;submit.textContent=todayEntryExists?"수정하고 새 문장 받기 ↗":"마음 남기기 ↗"}
 });
 if(!sessionStorage.getItem("daily-checkin-seen"))setTimeout(openCheckin,850);
 
