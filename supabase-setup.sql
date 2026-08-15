@@ -14,22 +14,26 @@ create table if not exists public.journal_entries (
 
 alter table public.journal_entries enable row level security;
 
+drop policy if exists "users can read own journal" on public.journal_entries;
 create policy "users can read own journal"
 on public.journal_entries for select
 to authenticated
 using ((select auth.uid()) = user_id);
 
+drop policy if exists "users can create own journal" on public.journal_entries;
 create policy "users can create own journal"
 on public.journal_entries for insert
 to authenticated
 with check ((select auth.uid()) = user_id);
 
+drop policy if exists "users can update own journal" on public.journal_entries;
 create policy "users can update own journal"
 on public.journal_entries for update
 to authenticated
 using ((select auth.uid()) = user_id)
 with check ((select auth.uid()) = user_id);
 
+drop policy if exists "users can delete own journal" on public.journal_entries;
 create policy "users can delete own journal"
 on public.journal_entries for delete
 to authenticated

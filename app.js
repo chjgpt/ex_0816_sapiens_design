@@ -192,3 +192,41 @@ $("#checkinForm").addEventListener("submit",async event=>{
   finally{submit.disabled=false;submit.textContent="마음 남기기 ↗"}
 });
 if(!sessionStorage.getItem("daily-checkin-seen"))setTimeout(openCheckin,850);
+
+// Personal journal history and account linking
+const recordsDialog=$("#recordsDialog"), recordsList=$("#recordsList");
+const escapeHTML=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
+function formatEntryDate(value){
+  return new Intl.DateTimeFormat("ko-KR",{year:"numeric",month:"long",day:"numeric",weekday:"short"}).format(new Date(`${value}T00:00:00`));
+}
+async function loadRecords(){
+  $("#recordsStatus").textContent="기록을 불러오는 중…";recordsList.innerHTML="";
+  try{
+    const client=await getSupabase();
+    const {data:{user}}=await client.auth.getUser();
+    const linked=user&&!user.is_anonymous;
+    $("#accountBanner").hidden=linked;
+    $("#accountStatus").textContent=linked?"계정에 연결되어 다른 기기에서도 이어볼 수 있어요.":"이 브라우저에 보관된 익명 기록이에요.";
+    const {data,error}=await client.from("journal_entries").select("id,entry_date,mood,content,quote_text,quote_author").order("entry_date",{ascending:false});
+    if(error)throw error;
+    $("#recordsStatus").textContent=data.length?`${data.length}일의 마음을 간직하고 있어요.`:"아직 남긴 기록이 없어요.";
+    recordsList.innerHTML=data.map(entry=>`<article class="record-card"><div class="record-meta"><time datetime="${entry.entry_date}">${formatEntryDate(entry.entry_date)}</time><span>${escapeHTML(entry.mood)}</span></div>${entry.content?`<p class="record-journal">${escapeHTML(entry.content)}</p>`:""}<blockquote><p>“${escapeHTML(entry.quote_text)}”</p><footer>— ${escapeHTML(entry.quote_author)}</footer></blockquote><button type="button" data-delete-entry="${entry.id}">기록 삭제</button></article>`).join("");
+  }catch(error){$("#recordsStatus").textContent=error.message||"기록을 불러오지 못했어요."}
+}
+async function openRecords(){
+  if(!recordsDialog.open)recordsDialog.showModal();document.body.classList.add("dialog-open");
+  await loadRecords();
+}
+function closeRecords(){if(recordsDialog.open)recordsDialog.close();document.body.classList.remove("dialog-open")}
+$("#recordsNav").addEventListener("click",openRecords);$("#recordsClose").addEventListener("click",closeRecords);
+recordsDialog.addEventListener("cancel",event=>{event.preventDefault();closeRecords()});
+recordsList.addEventListener("click",async event=>{
+  const button=event.target.closest("[data-delete-entry]");if(!button)return;
+  if(!confirm("이 기록을 삭제할까요? 삭제한 기록은 복구할 수 없어요."))return;
+  button.disabled=true;
+  try{const client=await getSupabase();const {error}=await client.from("journal_entries").delete().eq("id",button.dataset.deleteEntry);if(error)throw error;toast("기록을 삭제했어요.");await loadRecords()}catch(error){$("#recordsStatus").textContent=error.message||"삭제하지 못했어요.";button.disabled=false}
+});
+$("#linkGoogle").addEventListener("click",async()=>{
+  const button=$("#linkGoogle");button.disabled=true;button.textContent="Google로 이동하는 중…";
+  try{const client=await getSupabase();const {error}=await client.auth.linkIdentity({provider:"google",options:{redirectTo:location.origin}});if(error)throw error}catch(error){$("#recordsStatus").textContent=error.message||"Google 계정을 연결하지 못했어요.";button.disabled=false;button.textContent="Google로 기록 지키기 ↗"}
+});
