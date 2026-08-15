@@ -13,3 +13,19 @@ body{background:var(--paper);font-family:Arial,"Noto Sans KR",system-ui,sans-ser
 .closing{background:var(--lime);padding:140px 24px}.closing h2{font-size:clamp(48px,6vw,78px)}.closing .secondary-button{background:var(--olive);color:#fff}.site-footer{background:var(--paper);border-color:var(--hair);color:var(--muted)}.toast{background:var(--olive);border-radius:999px}
 @media(max-width:734px){.global-nav{height:66px;margin:12px;border-radius:0 0 18px 18px;padding:0 18px}.global-nav nav{gap:18px}.sub-nav{top:98px}.sub-nav-inner{padding:0 24px}.hero{padding-top:160px}.hero h1{font-size:52px}.hero .primary-button{margin-left:0}.orb{width:100%;border-radius:22px;height:220px;padding:24px}.orb span{font-size:130px}.orb:after{right:-80px}.quote-stage{padding:90px 24px}blockquote p{font-size:40px}.explore h2,.closing h2{font-size:46px}.mini-card:nth-child(even){background:var(--lime)}}
 @media(max-width:420px){.global-nav nav{gap:12px}.nav-saved{font-size:12px}.hero h1{font-size:44px}.orb small{font-size:12px}.quote-actions .primary-button{width:100%}}
+
+/* Motion system */
+@keyframes rise-in{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes quote-in{from{opacity:0;transform:translateY(34px);filter:blur(6px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.reveal.is-visible{opacity:1;transform:translateY(0)}
+.hero h1.reveal{transition-delay:.08s}.hero-copy.reveal{transition-delay:.16s}.hero>.primary-button.reveal{transition-delay:.24s}.orb.reveal{transition-delay:.28s}
+.orb.is-visible{animation:breathe 6s ease-in-out 1.1s infinite}.orb:after{transition:transform 1.2s cubic-bezier(.22,1,.36,1)}.orb:hover:after{transform:translate(-22px,24px) scale(1.08)}
+.primary-button,.secondary-button,.filter,.icon-button,.mini-card{transition:transform .3s cubic-bezier(.22,1,.36,1),background-color .25s,color .25s,border-color .25s}
+.primary-button:hover,.secondary-button:hover{transform:translateY(-3px)}.icon-button:hover{transform:rotate(8deg) scale(1.06)}.filter:hover{transform:translateY(-2px);border-color:var(--olive)}
+.quote-inner{transition:opacity .28s ease,transform .28s ease,filter .28s ease}.quote-inner.quote-leave{opacity:0;transform:translateY(-24px);filter:blur(5px)}.quote-inner.quote-enter{animation:quote-in .65s cubic-bezier(.22,1,.36,1) both}
+.scroll-char{display:inline-block;opacity:calc(.08 + var(--reveal,0) * .92);transform:translateY(calc((1 - var(--reveal,0)) * 22px));filter:blur(calc((1 - var(--reveal,0)) * 7px));transition:opacity .08s linear,transform .08s linear,filter .08s linear;will-change:opacity,transform,filter}.scroll-char[style*="&nbsp;"]{width:.25em}
+.mini-card{opacity:0;transform:translateY(24px)}.mini-card.card-enter{animation:rise-in .65s cubic-bezier(.22,1,.36,1) var(--delay,0ms) forwards}.mini-card:hover{transform:translateY(-8px)!important}.mini-card button span{transition:transform .2s}.brand-mark{transition:transform .35s cubic-bezier(.22,1,.36,1)}.brand-mark:hover{transform:rotate(-5deg) scale(1.08)}
+.saved-panel:not([hidden]){animation:rise-in .55s cubic-bezier(.22,1,.36,1) both}.toast.show{animation:rise-in .35s cubic-bezier(.22,1,.36,1) both}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal,.reveal.is-visible,.mini-card,.mini-card.card-enter,.quote-inner,.orb.is-visible,.saved-panel:not([hidden]),.toast.show,.scroll-char{opacity:1;transform:none;filter:none;animation:none;transition:none}.primary-button,.secondary-button,.filter,.icon-button,.brand-mark{transition:none}}
