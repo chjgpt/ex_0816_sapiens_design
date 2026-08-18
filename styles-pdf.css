@@ -35,5 +35,32 @@ body.dialog-open{overflow:hidden}.checkin-dialog{width:100%;height:100%;max-widt
 @media(max-width:734px){.checkin-dialog{padding:12px}.checkin-card{padding:28px 22px;border-radius:22px;max-height:calc(100vh - 24px)}.checkin-card h2{font-size:46px}.checkin-actions{align-items:stretch;flex-direction:column-reverse}.checkin-actions .primary-button{width:100%}.checkin-skip{min-height:44px}}
 .checkin-saved-quote{margin-top:14px;padding:18px 20px;border:1px solid #cbd5cd;border-radius:18px}.checkin-saved-quote[hidden]{display:none}.checkin-saved-quote>span{color:var(--olive);font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}.checkin-saved-quote p{font:400 17px/1.45 Georgia,"Times New Roman",serif;margin:12px 0 6px}.checkin-saved-quote small{color:var(--muted)}
 
+/* MVP1 quote evaluation */
+.rating-card{margin-top:64px;padding-top:42px;border-top:1px solid rgba(255,255,255,.3)}
+.rating-card fieldset{margin:0;padding:0;border:0}
+.rating-card legend{font:400 clamp(24px,3.2vw,38px)/1.25 Georgia,"Times New Roman",serif;letter-spacing:-.025em;color:#fff;max-width:720px}
+.rating-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:26px}
+.rating-options input{position:absolute;inline-size:1px;block-size:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.rating-options label{min-height:88px;padding:14px 10px;border:1px solid rgba(255,255,255,.38);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;color:#d9e0d2;cursor:pointer;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
+.rating-options label strong{font:400 27px/1 Georgia,"Times New Roman",serif;color:#fff}
+.rating-options label span{font-size:11px;line-height:1.25}
+.rating-options label:hover{border-color:var(--lime);transform:translateY(-2px)}
+.rating-options input:focus-visible+label{outline:2px solid var(--lime);outline-offset:3px}
+.rating-options input:checked+label{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.rating-options input:checked+label strong{color:var(--ink)}
+.feedback-field{display:block;margin-top:28px}
+.feedback-field>span{display:block;margin-bottom:10px;color:#fff;font-size:14px;font-weight:600}
+.feedback-field small{color:#c7d1bb;font-weight:400}
+.feedback-field textarea{width:100%;resize:vertical;min-height:100px;padding:16px 18px;border:1px solid rgba(255,255,255,.38);border-radius:16px;background:rgba(255,255,255,.08);color:#fff;font:400 16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;outline:0}
+.feedback-field textarea::placeholder{color:#b9c3b1}
+.feedback-field textarea:focus{border-color:var(--lime);box-shadow:0 0 0 2px rgba(221,239,145,.18)}
+.privacy-note{margin:10px 0 0;color:#c7d1bb;font-size:12px;line-height:1.5}
+.rating-submit-row{display:flex;align-items:center;gap:18px;margin-top:22px}
+.rating-card .secondary-button{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+.rating-card.is-complete .secondary-button{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.rating-card :disabled{cursor:default;opacity:.72}
+.rating-status{margin:0;color:var(--lime);font-size:14px;line-height:1.45}
+@media(max-width:734px){.rating-card{margin-top:50px;padding-top:34px}.rating-options{grid-template-columns:repeat(5,1fr);gap:6px}.rating-options label{min-height:72px;padding:10px 3px;border-radius:13px}.rating-options label strong{font-size:23px}.rating-options label span{display:none}.rating-submit-row{align-items:stretch;flex-direction:column}.rating-submit-row .secondary-button{width:100%}}
+
 /* Journal history */
 .records-dialog{width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:24px;border:0;background:var(--paper)}.records-dialog[open]{display:block;animation:dialog-fade .35s ease both}.records-dialog::backdrop{background:var(--paper)}.records-shell{width:min(980px,100%);margin:0 auto;padding:42px 0 100px}.records-head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:42px;border-bottom:1px solid var(--hair)}.records-head h2{font:400 clamp(54px,8vw,90px)/.98 Georgia,"Times New Roman",serif;letter-spacing:-.04em;margin:16px 0}.records-head>div>p:last-child{color:var(--muted)}.account-banner{display:flex;align-items:center;justify-content:space-between;gap:24px;background:var(--lime);border-radius:24px;padding:28px 32px;margin:32px 0}.account-banner strong{font-size:18px}.account-banner p{color:#536044;margin:8px 0 0}.account-banner .secondary-button{background:var(--olive);color:#fff;white-space:nowrap}.records-status{color:var(--muted);margin:36px 0 20px}.records-list{display:grid;gap:16px}.record-card{background:#fff;border-radius:24px;padding:34px}.record-meta{display:flex;justify-content:space-between;align-items:center;color:var(--olive);font-size:13px}.record-meta span{text-transform:uppercase;letter-spacing:.08em}.record-journal{font:400 28px/1.45 Georgia,"Times New Roman",serif;margin:28px 0}.record-card blockquote{border-top:1px solid var(--hair);margin:28px 0 0;padding-top:24px}.record-card blockquote p{font:400 18px/1.5 Georgia,"Times New Roman",serif;letter-spacing:-.01em}.record-card blockquote footer{color:var(--muted);font-size:13px;margin-top:10px}.record-card>button{display:block;margin:24px 0 0 auto;border:0;background:transparent;color:var(--muted);font-size:12px;text-decoration:underline}.account-banner[hidden]{display:none}@media(max-width:734px){.records-dialog{padding:16px}.records-shell{padding-top:20px}.account-banner{align-items:stretch;flex-direction:column}.account-banner .secondary-button{width:100%}.record-card{padding:25px}.record-journal{font-size:24px}}

@@ -4,26 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#edf3ef" />
-  <meta name="description" content="위로와 성장이 필요한 오늘, 마음에 맞는 명언을 추천받고 한 줄 일기로 하루를 기록해 보세요." />
+  <meta name="description" content="오늘을 위한 명언 한 문장을 무작위로 추천받고, 저장하고 공유해 보세요." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ex-0816-sapiens-design.vercel.app/" />
   <meta property="og:locale" content="ko_KR" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="하루 한 문장" />
-  <meta property="og:title" content="하루 한 문장 | 오늘의 명언과 한 줄 일기" />
-  <meta property="og:description" content="지금의 마음을 남기고, 위로와 성장에 도움이 되는 오늘의 문장을 만나보세요." />
+  <meta property="og:title" content="하루 한 문장 | 오늘의 명언 추천" />
+  <meta property="og:description" content="일상에 짧은 동기부여와 위안을 건네는 오늘의 문장을 만나보세요." />
   <meta property="og:url" content="https://ex-0816-sapiens-design.vercel.app/" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="하루 한 문장 | 오늘의 명언과 한 줄 일기" />
-  <meta name="twitter:description" content="지금의 마음을 남기고, 위로와 성장에 도움이 되는 오늘의 문장을 만나보세요." />
-  <title>하루 한 문장 | 오늘의 명언과 한 줄 일기</title>
+  <meta name="twitter:title" content="하루 한 문장 | 오늘의 명언 추천" />
+  <meta name="twitter:description" content="일상에 짧은 동기부여와 위안을 건네는 오늘의 문장을 만나보세요." />
+  <title>하루 한 문장 | 오늘의 명언 추천</title>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "하루 한 문장",
       "url": "https://ex-0816-sapiens-design.vercel.app/",
-      "description": "마음에 맞는 명언을 추천받고 한 줄 일기로 하루를 기록하는 웹 애플리케이션",
+      "description": "오늘을 위한 명언 한 문장을 무작위로 추천하는 웹 애플리케이션",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Any",
       "inLanguage": "ko-KR",
@@ -45,10 +45,7 @@
   <header class="global-nav">
     <a class="brand-mark" href="#top" aria-label="하루 한 문장 홈"><span>하</span></a>
     <nav aria-label="주요 메뉴">
-      <button class="nav-saved" id="checkinNav" type="button">오늘의 마음</button>
-      <button class="nav-saved" id="recordsNav" type="button">나의 기록</button>
       <a href="#today">오늘의 문장</a>
-      <a href="#explore">둘러보기</a>
       <button class="nav-saved" id="savedNav" type="button">저장한 문장 <span id="savedCount">0</span></button>
     </nav>
   </header>
@@ -64,7 +61,7 @@
     <section class="hero" id="today" aria-labelledby="heroTitle">
       <p class="eyebrow">오늘, 당신에게 도착한 말</p>
       <h1 id="heroTitle">한 문장이<br />하루의 방향을 바꿉니다.</h1>
-      <p class="hero-copy">마음에는 위안을, 일상에는 작은 용기를.<br />오늘 필요한 말을 천천히 만나보세요.</p>
+      <p class="hero-copy">일상에 짧은 동기부여와 위안을 건네는<br />오늘의 문장을 천천히 만나보세요.</p>
       <a class="primary-button" href="#quote">오늘의 문장 보기 <span aria-hidden="true">↓</span></a>
       <div class="orb" aria-hidden="true"><span>“</span><small>마음에 여백을 만드는<br />오늘의 한 문장</small></div>
     </section>
@@ -90,21 +87,33 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L8 7m4-4 4 4M5 11v9h14v-9"/></svg>
           </button>
         </div>
+        <form class="rating-card" id="ratingForm">
+          <fieldset>
+            <legend>이 문장이 오늘의 나에게 얼마나 도움이 되었나요?</legend>
+            <div class="rating-options" role="radiogroup" aria-label="도움 정도 1점에서 5점">
+              <input type="radio" name="rating" id="rating1" value="1" required />
+              <label for="rating1"><strong>1</strong><span>전혀 아니에요</span></label>
+              <input type="radio" name="rating" id="rating2" value="2" />
+              <label for="rating2"><strong>2</strong><span>조금</span></label>
+              <input type="radio" name="rating" id="rating3" value="3" />
+              <label for="rating3"><strong>3</strong><span>보통</span></label>
+              <input type="radio" name="rating" id="rating4" value="4" />
+              <label for="rating4"><strong>4</strong><span>도움됐어요</span></label>
+              <input type="radio" name="rating" id="rating5" value="5" />
+              <label for="rating5"><strong>5</strong><span>매우 도움됐어요</span></label>
+            </div>
+          </fieldset>
+          <label class="feedback-field" for="ratingFeedback">
+            <span>이유가 있다면 짧게 남겨주세요. <small>(선택)</small></span>
+            <textarea id="ratingFeedback" maxlength="300" rows="3" placeholder="짧은 의견을 남겨주세요."></textarea>
+          </label>
+          <p class="privacy-note">이름, 연락처, 건강정보 등 개인정보나 민감한 내용은 입력하지 마세요.</p>
+          <div class="rating-submit-row">
+            <button class="secondary-button" id="ratingSubmit" type="submit">평가 제출</button>
+            <p class="rating-status" id="ratingStatus" role="status" aria-live="polite"></p>
+          </div>
+        </form>
       </div>
-    </section>
-
-    <section class="explore" id="explore" aria-labelledby="exploreTitle">
-      <p class="eyebrow">지금 내게 필요한 말</p>
-      <h2 id="exploreTitle">어떤 마음으로<br />오늘을 보내고 있나요?</h2>
-      <div class="filters" role="group" aria-label="명언 주제 선택">
-        <button class="filter active" data-category="전체" type="button">전체</button>
-        <button class="filter" data-category="위안" type="button">위안</button>
-        <button class="filter" data-category="용기" type="button">용기</button>
-        <button class="filter" data-category="성장" type="button">성장</button>
-        <button class="filter" data-category="관계" type="button">관계</button>
-      </div>
-      <div class="quote-grid" id="quoteGrid"></div>
-      <button class="text-link" id="showMore" type="button">더 많은 문장 보기 <span aria-hidden="true">＋</span></button>
     </section>
 
     <section class="saved-panel" id="savedPanel" hidden aria-labelledby="savedTitle">
@@ -128,56 +137,8 @@
     <p>© 2026 One Sentence a Day</p>
   </footer>
   <div class="toast" id="toast" role="status"></div>
-  <dialog class="checkin-dialog" id="checkinDialog" aria-labelledby="checkinTitle">
-    <form class="checkin-card" id="checkinForm">
-      <div class="checkin-top">
-        <p class="eyebrow">오늘의 마음 체크인</p>
-        <button class="checkin-close" id="checkinClose" type="button" aria-label="건너뛰기">×</button>
-      </div>
-      <h2 id="checkinTitle">지금 마음은<br />어떤가요?</h2>
-      <p class="checkin-copy">정답은 없어요. 오늘의 마음을 가볍게 남기면<br />지금 필요한 문장을 만날 수 있어요.</p>
-      <div class="mood-options" role="radiogroup" aria-label="오늘의 기분">
-        <button type="button" data-mood="평온해요">평온해요</button>
-        <button type="button" data-mood="지쳤어요">지쳤어요</button>
-        <button type="button" data-mood="불안해요">불안해요</button>
-        <button type="button" data-mood="용기가 필요해요">용기가 필요해요</button>
-      </div>
-      <label class="journal-field">
-        <span>오늘의 한 줄 <small>선택</small></span>
-        <textarea id="journalContent" maxlength="120" rows="3" placeholder="지금 떠오르는 마음을 적어보세요."></textarea>
-        <span class="character-count"><b id="journalCount">0</b> / 120</span>
-      </label>
-      <div class="checkin-saved-quote" id="checkinSavedQuote" hidden>
-        <span>오늘 함께한 문장</span>
-        <p id="checkinSavedQuoteText"></p>
-        <small id="checkinSavedQuoteAuthor"></small>
-      </div>
-      <p class="checkin-status" id="checkinStatus" role="status"></p>
-      <div class="checkin-actions">
-        <button class="checkin-skip" id="checkinSkip" type="button">오늘은 건너뛰기</button>
-        <button class="primary-button" id="checkinSubmit" type="submit">마음 남기기 ↗</button>
-      </div>
-    </form>
-  </dialog>
-  <dialog class="records-dialog" id="recordsDialog" aria-labelledby="recordsTitle">
-    <section class="records-shell">
-      <header class="records-head">
-        <div>
-          <p class="eyebrow">나만의 마음 보관함</p>
-          <h2 id="recordsTitle">나의 기록</h2>
-          <p id="accountStatus">이 브라우저에 안전하게 보관된 기록이에요.</p>
-        </div>
-        <button class="checkin-close" id="recordsClose" type="button" aria-label="나의 기록 닫기">×</button>
-      </header>
-      <div class="account-banner" id="accountBanner">
-        <div><strong>기록을 잃지 않도록 지켜주세요.</strong><p>Google 계정에 연결하면 다른 기기에서도 이어볼 수 있어요.</p></div>
-        <button class="secondary-button" id="linkGoogle" type="button">Google로 기록 지키기 ↗</button>
-      </div>
-      <p class="records-status" id="recordsStatus" role="status">기록을 불러오는 중…</p>
-      <div class="records-list" id="recordsList"></div>
-    </section>
-  </dialog>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
+  <script src="mvp-v1.js"></script>
 </body>
 </html>
