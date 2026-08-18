@@ -17,6 +17,8 @@ let recommendationCount = 0;
 let scrollTextFrame;
 let supabaseClient = null;
 let trackingClientPromise = null;
+let trackingQueue = Promise.resolve();
+const TRACKING_MAX_RETRIES = 2;
 
 function loadSavedQuoteIds() {
   let stored;
@@ -71,6 +73,7 @@ async function getTrackingClient() {
     }
     return supabaseClient;
   })().catch(error => {
+    supabaseClient = null;
     trackingClientPromise = null;
     throw error;
   });
@@ -93,16 +96,29 @@ function trackEvent(eventName, values = {}) {
     created_at: new Date().toISOString()
   };
 
-  void getTrackingClient()
-    .then(async client => {
-      const { data: { user } } = await client.auth.getUser();
-      if (!user) return;
+  trackingQueue = trackingQueue.then(() => insertTrackingEvent(event));
+}
+
+async function insertTrackingEvent(event) {
+  for (let attempt = 0; attempt <= TRACKING_MAX_RETRIES; attempt += 1) {
+    try {
+      const client = await getTrackingClient();
+      const { data: { user }, error: userError } = await client.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("Supabase user is unavailable.");
+
       const { error } = await client.from("mvp_events").insert({ ...event, user_id: user.id });
       if (error) throw error;
-    })
-    .catch(() => {
-      // 분석 설정 전이나 일시적인 네트워크 오류가 있어도 핵심 경험은 계속 동작합니다.
-    });
+      return;
+    } catch (error) {
+      if (attempt === TRACKING_MAX_RETRIES) {
+        console.warn(`[MVP analytics] Failed to store ${event.event_name}.`, error);
+        return;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 250 * (attempt + 1)));
+    }
+  }
 }
 
 function quoteEventValues(quote = currentQuote(), metadata = {}) {
