@@ -42,6 +42,29 @@
   <link rel="stylesheet" href="styles-pdf.css" />
 </head>
 <body>
+  <dialog class="checkin-dialog category-dialog" id="categoryDialog" aria-labelledby="categoryTitle">
+    <form class="checkin-card category-card" id="categoryForm" method="dialog">
+      <div class="checkin-top">
+        <p class="eyebrow">오늘의 문장 선택</p>
+        <button class="checkin-close" id="categoryClose" type="button" aria-label="카테고리 선택 닫기" hidden>×</button>
+      </div>
+      <h2 id="categoryTitle">오늘 어떤 문장이<br />필요한가요?</h2>
+      <p class="checkin-copy">지금 마음이 향하는 주제를 하나 골라주세요.<br />선택한 주제 안에서 오늘의 한 문장을 추천해 드릴게요.</p>
+      <div class="category-options" role="radiogroup" aria-label="문장 카테고리">
+        <button type="button" role="radio" aria-checked="false" data-category="위안"><strong>위안</strong><span>잠시 쉬어갈 말</span></button>
+        <button type="button" role="radio" aria-checked="false" data-category="용기"><strong>용기</strong><span>한 발 내딛는 말</span></button>
+        <button type="button" role="radio" aria-checked="false" data-category="성장"><strong>성장</strong><span>배우고 나아가는 말</span></button>
+        <button type="button" role="radio" aria-checked="false" data-category="관계"><strong>관계</strong><span>서로를 이해하는 말</span></button>
+        <button type="button" role="radio" aria-checked="false" data-category="자기확신"><strong>자기확신</strong><span>나를 믿게 하는 말</span></button>
+      </div>
+      <p class="checkin-status" id="categoryStatus" role="status" aria-live="polite"></p>
+      <div class="checkin-actions category-actions">
+        <span>언제든 다시 선택할 수 있어요.</span>
+        <button class="primary-button checkin-submit" id="categorySubmit" type="submit" disabled>문장 만나기 →</button>
+      </div>
+    </form>
+  </dialog>
+
   <header class="global-nav">
     <a class="brand-mark" href="#top" aria-label="하루 한 문장 홈"><span>하</span></a>
     <nav aria-label="주요 메뉴">
@@ -79,6 +102,7 @@
         <p class="reflection" id="quoteReflection"></p>
         <div class="quote-actions">
           <button class="primary-button" id="nextQuote" type="button">새 문장 추천</button>
+          <button class="secondary-button" id="changeCategory" type="button">카테고리 다시 선택</button>
           <button class="secondary-button" id="saveQuote" type="button" aria-pressed="false">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17L12 17l-5.5 3.5v-17Z"/></svg>
             <span>저장</span>
@@ -139,6 +163,6 @@
   <div class="toast" id="toast" role="status"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
-  <script src="mvp-v1.js"></script>
+  <script src="mvp-v2.js"></script>
 </body>
 </html>
