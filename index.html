@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#edf3ef" />
-  <meta name="description" content="오늘을 위한 명언 한 문장을 무작위로 추천받고, 저장하고 공유해 보세요." />
+  <meta name="description" content="원하는 주제와 오늘의 상황에 어울리는 명언 한 문장을 추천받고, 저장하고 공유해 보세요." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://ex-0816-sapiens-design.vercel.app/" />
   <meta property="og:locale" content="ko_KR" />
@@ -45,22 +45,38 @@
   <dialog class="checkin-dialog category-dialog" id="categoryDialog" aria-labelledby="categoryTitle">
     <form class="checkin-card category-card" id="categoryForm" method="dialog">
       <div class="checkin-top">
-        <p class="eyebrow">오늘의 문장 선택</p>
+        <p class="eyebrow">오늘의 말 선택</p>
         <button class="checkin-close" id="categoryClose" type="button" aria-label="카테고리 선택 닫기" hidden>×</button>
       </div>
-      <h2 id="categoryTitle">오늘 어떤 문장이<br />필요한가요?</h2>
-      <p class="checkin-copy">지금 마음이 향하는 주제를 하나 골라주세요.<br />선택한 주제 안에서 오늘의 한 문장을 추천해 드릴게요.</p>
-      <div class="category-options" role="radiogroup" aria-label="문장 카테고리">
-        <button type="button" role="radio" aria-checked="false" data-category="위안"><strong>위안</strong><span>잠시 쉬어갈 말</span></button>
-        <button type="button" role="radio" aria-checked="false" data-category="용기"><strong>용기</strong><span>한 발 내딛는 말</span></button>
-        <button type="button" role="radio" aria-checked="false" data-category="성장"><strong>성장</strong><span>배우고 나아가는 말</span></button>
-        <button type="button" role="radio" aria-checked="false" data-category="관계"><strong>관계</strong><span>서로를 이해하는 말</span></button>
-        <button type="button" role="radio" aria-checked="false" data-category="자기확신"><strong>자기확신</strong><span>나를 믿게 하는 말</span></button>
+      <h2 id="categoryTitle">오늘 어떤 말이 필요하신가요?</h2>
+      <p class="checkin-copy">원하는 주제를 고르고, 필요하다면 지금의 상황이나 원하는 분위기를 들려주세요. 어울리는 문구를 찾아드릴게요.</p>
+      <div class="category-workspace">
+        <section class="category-choice-panel" aria-labelledby="categoryStepTitle">
+          <p class="category-step" id="categoryStepTitle"><span>1</span> 카테고리 선택</p>
+          <div class="category-options" role="radiogroup" aria-label="문장 카테고리">
+            <button type="button" role="radio" aria-checked="false" data-category="위로"><strong>위로</strong><span>힘들거나 지친 마음을 달래고 싶을 때</span></button>
+            <button type="button" role="radio" aria-checked="false" data-category="동기부여"><strong>동기부여</strong><span>다시 시작하거나 앞으로 나아갈 힘이 필요할 때</span></button>
+            <button type="button" role="radio" aria-checked="false" data-category="관계"><strong>관계</strong><span>사람 사이의 고민이나 마음을 정리하고 싶을 때</span></button>
+            <button type="button" role="radio" aria-checked="false" data-category="자존감"><strong>자존감</strong><span>나 자신을 조금 더 믿고 아껴주고 싶을 때</span></button>
+            <button type="button" role="radio" aria-checked="false" data-category="긍정"><strong>긍정</strong><span>삶의 좋은 면을 바라보며 기분을 밝히고 싶을 때</span></button>
+          </div>
+        </section>
+        <section class="category-context-panel" aria-labelledby="contextStepTitle">
+          <p class="category-step" id="contextStepTitle"><span>2</span> 선택 입력</p>
+          <div class="situation-card">
+            <label class="situation-field" for="situationInput">
+              <span>지금 어떤 상황인가요?</span>
+              <small class="situation-hint" id="situationGuide">상황이나 감정, 듣고 싶은 말의 분위기를 자유롭게 적어주세요.</small>
+              <textarea id="situationInput" maxlength="240" rows="3" aria-describedby="situationGuide situationCount" placeholder="카테고리를 선택하면 상황에 맞는 예시가 보여요."></textarea>
+              <span class="character-count" id="situationCount"><b>0</b>/240</span>
+            </label>
+          </div>
+        </section>
       </div>
       <p class="checkin-status" id="categoryStatus" role="status" aria-live="polite"></p>
       <div class="checkin-actions category-actions">
-        <span>언제든 다시 선택할 수 있어요.</span>
-        <button class="primary-button checkin-submit" id="categorySubmit" type="submit" disabled>문장 만나기 →</button>
+        <span class="category-optional-note">상황을 따로 적지 않아도 선택한 카테고리에 맞는 말을 골라드려요.</span>
+        <button class="primary-button checkin-submit" id="categorySubmit" type="submit" disabled>오늘의 말 만나기 →</button>
       </div>
     </form>
   </dialog>
@@ -68,32 +84,29 @@
   <header class="global-nav">
     <a class="brand-mark" href="#top" aria-label="하루 한 문장 홈"><span>하</span></a>
     <nav aria-label="주요 메뉴">
-      <a href="#today">오늘의 문장</a>
-      <button class="nav-saved" id="savedNav" type="button">저장한 문장 <span id="savedCount">0</span></button>
+      <a href="#today">오늘의 말</a>
+      <button class="nav-saved" id="savedNav" type="button">저장한 말 <span id="savedCount">0</span></button>
+      <button class="nav-saved" id="libraryNav" type="button" aria-controls="libraryPanel" aria-expanded="false">문구 라이브러리</button>
     </nav>
   </header>
 
-  <div class="sub-nav" id="top">
-    <div class="sub-nav-inner">
-      <a class="wordmark" href="#top">하루 한 문장</a>
-      <span id="todayLabel"></span>
-    </div>
-  </div>
-
-  <main>
+  <main id="top">
     <section class="hero" id="today" aria-labelledby="heroTitle">
-      <p class="eyebrow">오늘, 당신에게 도착한 말</p>
-      <h1 id="heroTitle">한 문장이<br />하루의 방향을 바꿉니다.</h1>
-      <p class="hero-copy">일상에 짧은 동기부여와 위안을 건네는<br />오늘의 문장을 천천히 만나보세요.</p>
-      <a class="primary-button" href="#quote">오늘의 문장 보기 <span aria-hidden="true">↓</span></a>
-      <div class="orb" aria-hidden="true"><span>“</span><small>마음에 여백을 만드는<br />오늘의 한 문장</small></div>
+      <div class="hero-topline">
+        <p class="eyebrow">오늘, 당신에게 도착한 말</p>
+        <time id="todayLabel"></time>
+      </div>
+      <h1 id="heroTitle">마음에 남는 <wbr />한마디가<br />하루의 방향을 <wbr />바꿉니다.</h1>
+      <p class="hero-copy">지금의 마음과 상황에 어울리는 말을 만나보세요.</p>
+      <a class="primary-button" href="#quote">오늘의 추천 보기 <span aria-hidden="true">↓</span></a>
+      <div class="orb" aria-hidden="true"><span>“</span><small>마음에 여백을 만드는<br />오늘의 한마디</small></div>
     </section>
 
     <section class="quote-stage" id="quote" aria-live="polite">
       <div class="quote-inner">
         <div class="quote-meta">
-          <span id="quoteCategory">성장</span>
-          <span>오늘의 한 문장</span>
+          <span id="quoteCategory">동기부여</span>
+          <span>오늘의 추천</span>
         </div>
         <blockquote>
           <p id="quoteText"></p>
@@ -101,7 +114,7 @@
         </blockquote>
         <p class="reflection" id="quoteReflection"></p>
         <div class="quote-actions">
-          <button class="primary-button" id="nextQuote" type="button">새 문장 추천</button>
+          <button class="primary-button" id="nextQuote" type="button">새 문구 추천</button>
           <button class="secondary-button" id="changeCategory" type="button">카테고리 다시 선택</button>
           <button class="secondary-button" id="saveQuote" type="button" aria-pressed="false">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11v17L12 17l-5.5 3.5v-17Z"/></svg>
@@ -113,7 +126,7 @@
         </div>
         <form class="rating-card" id="ratingForm">
           <fieldset>
-            <legend>이 문장이 오늘의 나에게 얼마나 도움이 되었나요?</legend>
+            <legend>오늘의 추천이 나에게 얼마나 도움이 되었나요?</legend>
             <div class="rating-options" role="radiogroup" aria-label="도움 정도 1점에서 5점">
               <input type="radio" name="rating" id="rating1" value="1" required />
               <label for="rating1"><strong>1</strong><span>전혀 아니에요</span></label>
@@ -142,27 +155,54 @@
 
     <section class="saved-panel" id="savedPanel" hidden aria-labelledby="savedTitle">
       <div class="saved-head">
-        <div><p class="eyebrow">나만의 문장 보관함</p><h2 id="savedTitle">저장한 문장</h2></div>
-        <button class="icon-button light" id="closeSaved" type="button" aria-label="저장한 문장 닫기">×</button>
+        <div><p class="eyebrow">나만의 말 보관함</p><h2 id="savedTitle">저장한 말</h2></div>
+        <button class="icon-button light" id="closeSaved" type="button" aria-label="저장한 말 닫기">×</button>
       </div>
       <div class="saved-list" id="savedList"></div>
     </section>
 
+    <section class="library-panel" id="libraryPanel" hidden aria-labelledby="libraryTitle">
+      <div class="library-shell">
+        <div class="library-head">
+          <div>
+            <p class="eyebrow">마음에 머무는 말들</p>
+            <h2 id="libraryTitle">문구 라이브러리</h2>
+            <p class="library-copy">오늘 필요한 말을 천천히 둘러보세요.</p>
+          </div>
+          <button class="icon-button light" id="closeLibrary" type="button" aria-label="문구 라이브러리 닫기">×</button>
+        </div>
+        <div class="library-toolbar">
+          <div class="library-filters" role="group" aria-label="문구 카테고리 필터">
+            <button class="filter library-filter active" type="button" data-library-category="전체" aria-pressed="true">전체</button>
+            <button class="filter library-filter" type="button" data-library-category="위로" aria-pressed="false">위로</button>
+            <button class="filter library-filter" type="button" data-library-category="동기부여" aria-pressed="false">동기부여</button>
+            <button class="filter library-filter" type="button" data-library-category="관계" aria-pressed="false">관계</button>
+            <button class="filter library-filter" type="button" data-library-category="자존감" aria-pressed="false">자존감</button>
+            <button class="filter library-filter" type="button" data-library-category="긍정" aria-pressed="false">긍정</button>
+          </div>
+          <p class="library-count" id="libraryCount" aria-live="polite"></p>
+        </div>
+        <div class="library-grid" id="libraryGrid"></div>
+        <button class="library-more" id="libraryShowMore" type="button">더 많은 문구 보기 <span aria-hidden="true">＋</span></button>
+      </div>
+    </section>
+
     <section class="closing">
-      <p class="eyebrow">내일도 한 문장</p>
-      <h2>좋은 말은 삶을<br />조금씩 좋은 쪽으로 움직입니다.</h2>
-      <a class="secondary-button" href="#top">처음으로 돌아가기 ↑</a>
+      <div class="closing-inner">
+        <p class="eyebrow">여기까지, 오늘의 한마디</p>
+        <h2><span class="closing-line closing-line-one">필요한 순간엔 언제든,</span><span class="closing-line closing-line-two">또 찾아와도 좋아요.</span></h2>
+        <a class="secondary-button" href="#top">처음으로 돌아가기 ↑</a>
+      </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p><strong>하루 한 문장</strong><br />위로와 성장을 위한 매일의 작은 루틴.</p>
-    <p>명언은 널리 알려진 번역을 바탕으로 자연스럽게 다듬었습니다.</p>
-    <p>© 2026 One Sentence a Day</p>
+    <p><strong>하루 한마디</strong><br />마음에 필요한 말을 만나는 매일의 작은 루틴</p>
+    <p>© 2026 Words for Today</p>
   </footer>
   <div class="toast" id="toast" role="status"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
-  <script src="mvp-v2.js"></script>
+  <script src="mvp-v3.js"></script>
 </body>
 </html>
