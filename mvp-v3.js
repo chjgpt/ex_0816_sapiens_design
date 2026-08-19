@@ -17,6 +17,10 @@ const createId = () => crypto.randomUUID?.() || `session-${Date.now()}-${Math.ra
 const sessionId = sessionStorage.getItem(SESSION_ID_KEY) || createId();
 sessionStorage.setItem(SESSION_ID_KEY, sessionId);
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
 let currentIndex = -1;
 let selectedCategory = null;
 let pendingCategory = null;
@@ -817,4 +821,11 @@ if (!sessionStorage.getItem(SESSION_START_KEY)) {
 }
 renderSaved();
 updateClosingMotion();
-openCategoryDialog();
+window.scrollTo({ top: 0, behavior: "auto" });
+openCategoryDialog({ reset: true });
+
+addEventListener("pageshow", () => {
+  window.scrollTo({ top: 0, behavior: "auto" });
+  resetCategoryForm();
+  openCategoryDialog({ reset: true });
+}, { once: true });
